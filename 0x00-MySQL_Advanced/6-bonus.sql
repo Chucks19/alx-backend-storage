@@ -9,11 +9,11 @@
 DELIMITER $$;
 CREATE PROCEDURE AddBonus(IN user_id INT, IN project_name VARCHAR(255), IN score INT)
 BEGIN
-       IF NOT EXISTS(SELECT name FROM projects WHERE name=project_name) THEN
-		INSERT INTO projects (name) VALUES (project_name);
-       END IF;
-       INSERT INTO correction (user_id, project_id, score)
-       VALUES (user_id, (SELECT id from projects WHERE name=project_name), score);
+       INSERT INTO projects (name) SELECT * FROM (SELECT project_name) AS temp
+	    WHERE NOT EXISTS (SELECT name FROM projects WHERE name=project_name);
+           SELECT id INTO @project_id from projects WHERE name=project_name;
+           INSERT INTO corrections (user_id, project_id, score)
+           VALUES (user_id, @project_id, score);
 END;
 $$
 DELIMITER;
