@@ -108,4 +108,3 @@ class Cache:
         returns the value stored in the reds store at the key as str
         """
         return self.get(key, str)
-    
